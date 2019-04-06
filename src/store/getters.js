@@ -1,0 +1,1 @@
+export const gettersInfoList = state => state.infoList;
