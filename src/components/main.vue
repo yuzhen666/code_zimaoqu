@@ -12,7 +12,7 @@
                 </div>
             </li>
         </ul>
-        <el-pagination background layout="prev, pager, next" class="page-item" :total="1000"></el-pagination>
+        <el-pagination background layout="prev, pager, next" :total="resultCounts"></el-pagination>
     </div>
 </template>
 
@@ -24,12 +24,15 @@ export default {
         return {};
     },
     created() {
-        this.$store.dispatch("initInfoList");
+        this.invokeInitList();
+    },
+    methods: {
+        ...mapActions("zimaoqu", ["invokeInitList"])
     },
     computed: {
-        results() {
-            return this.$store.getters.gettersInfoList;
-        },
+        ...mapGetters("zimaoqu", {
+            results: "getList"
+        }),
         resultCounts() {
             return this.results.length;
         },
@@ -37,7 +40,6 @@ export default {
             return 2.33;
         }
     },
-    methods: {},
     filters: {
         formatContent: function(value) {
             return value.slice(0, 200) + "...";

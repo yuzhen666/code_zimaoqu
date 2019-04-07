@@ -4,27 +4,27 @@
         <ul>
             <li>
                 <label>
-                    <input name="region" type="radio" value>上海自贸区
+                    <input name="region" @click="selectInfo('SH')" type="radio" value>上海自贸区
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="region" type="radio" value>福建自贸区
+                    <input name="region" @click="selectInfo('FJ')" type="radio" value>福建自贸区
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="region" type="radio" value>广东自贸区
+                    <input name="region" @click="selectInfo('GD')" type="radio" value>广东自贸区
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="region" type="radio" value>河南自贸区
+                    <input name="region" @click="selectInfo('HN')" type="radio" value>河南自贸区
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="region" type="radio" value>陕西自贸区
+                    <input name="region" @click="selectInfo('SX')" type="radio" value>陕西自贸区
                 </label>
             </li>
         </ul>
@@ -32,22 +32,22 @@
         <ul>
             <li>
                 <label>
-                    <input name="timeRange" type="radio" value>时间不限
+                    <input name="timeRange" @click="selectInfo('NO LIMIT')" type="radio" value>时间不限
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="timeRange" type="radio" value>一天内
+                    <input name="timeRange" @click="selectInfo('day')" type="radio" value>一天内
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="timeRange" type="radio" value>一周内
+                    <input name="timeRange" @click="selectInfo('week')" type="radio" value>一周内
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="timeRange" type="radio" value>一月内
+                    <input name="timeRange" @click="selectInfo('month')" type="radio" value>一月内
                 </label>
             </li>
         </ul>
@@ -75,6 +75,11 @@ export default {
             msg: "Welcome to Your Vue.js App",
             radio2: 3
         };
+    },
+    methods: {
+        selectInfo(parameter) {
+            this.$store.dispatch("increment", parameter);
+        }
     }
 };
 </script>
