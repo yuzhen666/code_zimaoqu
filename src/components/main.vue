@@ -1,18 +1,26 @@
 <template>
     <div id="main">
-        <p class="result-text1">为您找到相关结果约{{resultCounts}}条，用时{{resultTime}}</p>
-        <p class="result-text2">以下为您显示“上海”的搜索结果。</p>
+        <p class="result-text1">为您找到相关结果约{{totalNum}}条。</p>
+        <p class="result-text2" v-if="keywords != ''">以下为您显示“{{keywords}}”的搜索结果。</p>
         <ul>
-            <li v-for="value in results" :key="value.report_id">
-                <p class="result-title mgb10 blue">{{value.report_title }}</p>
-                <p class="result-content mgb10">{{value.report_content | formatContent }}</p>
+            <li v-for="value in results" :key="value.id">
+                <p class="result-title mgb10 blue">{{value.title }}</p>
+                <p class="result-content mgb10">{{value.abstract | formatContent }}</p>
                 <div class="result-info">
-                    <span class="result-url mgb10 green">{{value.report_url | formatUrl}}</span>
-                    <span class="result-date">{{value.report_time | formatDate}}</span>
+                    <a class="result-url mgb10 green" :href=value.url>{{value.url | formatUrl}}</a>
+                    <span class="result-date">{{value.date | formatDate}}</span>
                 </div>
             </li>
         </ul>
-        <el-pagination background layout="prev, pager, next" :total="resultCounts"></el-pagination>
+        <el-pagination
+            background
+            layout="prev, pager, next"
+            :total="totalNum*10"
+            class="page-item"
+            @current-change="currentChange()"
+            ref="input1"
+            v-if="refresh"
+        ></el-pagination>
     </div>
 </template>
 
@@ -24,31 +32,52 @@ export default {
         return {};
     },
     created() {
-        this.invokeInitList();
+        this.invokePageList({
+            region: "all",
+            keywords: "",
+            pageNum: 0
+        });
     },
     methods: {
-        ...mapActions("zimaoqu", ["invokeInitList"])
+        ...mapActions("zimaoqu", ["invokePageList"]),
+        currentChange() {
+            this.invokePageList({
+                pageNum: this.$refs.input1.internalCurrentPage - 1,
+                region: this.region
+            });
+        }
     },
     computed: {
         ...mapGetters("zimaoqu", {
-            results: "getList"
+            results: "getList",
+            region: "getRegion",
+            currentPage: "getCurrentPage",
+            refresh: "getRefresh",
+            totalNum: "getTotalNum",
+            keywords: "getKeywords"
         }),
-        resultCounts() {
-            return this.results.length;
-        },
-        resultTime() {
-            return 2.33;
-        }
     },
     filters: {
         formatContent: function(value) {
-            return value.slice(0, 200) + "...";
+            if (!value) {
+                return "";
+            } else {
+                return value.slice(0, 200) + "...";
+            }
         },
         formatUrl: function(value) {
-            return value.slice(0, 50) + "...";
+            if (!value) {
+                return "";
+            } else {
+                return value.slice(0, 50) + "...";
+            }
         },
         formatDate: function(value) {
-            return value.slice(0, 10);
+            if (!value) {
+                return "";
+            } else {
+                return value.slice(0, 10);
+            }
         }
     }
 };

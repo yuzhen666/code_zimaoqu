@@ -5,19 +5,54 @@
             <p class="header-text brand-color">自贸区新闻检索平台</p>
         </div>
         <div class="header-right">
-            <input type="text" class="search-input" placeholder="     请输入搜索内容...">
-            <p class="search-text" style="color:cursor:pointer">搜索</p>
+            <input type="text" class="search-input" placeholder="请输入搜索内容..." v-model="keywords">
+            <p class="search-text" style="color:cursor:pointer" @click="search">搜索</p>
         </div>
     </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 export default {
     name: "myHeader",
     data() {
         return {
-            msg: "Welcome to Your Vue.js App"
+            keywords: ""
         };
+    },
+    methods: {
+        ...mapActions("zimaoqu", ["invokePageList"]),
+        ...mapActions("zimaoqu", ["invokeChangeKeywords"]),
+        currentChange() {
+            this.invokePageList({
+                pageNum: this.$refs.input1.internalCurrentPage - 1,
+                region: this.region
+            });
+        },
+        search() {
+            this.invokeChangeKeywords({ keywords: this.keywords });
+            this.invokePageList({
+                region: "浙江",
+                keywords: this.keywords,
+                pageNum: 0
+            });
+        }
+    },
+    computed: {
+        ...mapGetters("zimaoqu", {
+            results: "getList",
+            region: "getRegion",
+            currentPage: "getCurrentPage",
+            refresh: "getRefresh",
+            totalNum: "getTotalNum"
+            // keywords: "getKeywords"
+        }),
+        resultCounts() {
+            return 1222222;
+        },
+        resultTime() {
+            return 2.33;
+        }
     }
 };
 </script>
@@ -54,6 +89,7 @@ export default {
         .search-input
             width 90%;
             height 40px;
+            padding-left 20px;
             // border-radius 30px 0px 0px 30px;
 
         .search-text
