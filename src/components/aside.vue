@@ -4,62 +4,62 @@
         <ul>
             <li>
                 <label>
-                    <input name="region" @click="selectRegion('NO')" type="radio" value checked>不限
+                    <input name="region" @click="selectRegion('all')" type="radio" value checked>不限
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="region" @click="selectRegion('SH')" type="radio" value>上海自贸区
+                    <input name="region" @click="selectRegion('上海')" type="radio" value>上海自贸区
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="region" @click="selectRegion('FJ')" type="radio" value>福建自贸区
+                    <input name="region" @click="selectRegion('福建')" type="radio" value>福建自贸区
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="region" @click="selectRegion('GD')" type="radio" value>广东自贸区
+                    <input name="region" @click="selectRegion('广东')" type="radio" value>广东自贸区
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="region" @click="selectRegion('HN')" type="radio" value>河南自贸区
+                    <input name="region" @click="selectRegion('河南')" type="radio" value>河南自贸区
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="region" @click="selectRegion('SX')" type="radio" value>陕西自贸区
+                    <input name="region" @click="selectRegion('陕西')" type="radio" value>陕西自贸区
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="region" @click="selectRegion('SX')" type="radio" value>四川自贸区
+                    <input name="region" @click="selectRegion('四川')" type="radio" value>四川自贸区
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="region" @click="selectRegion('SX')" type="radio" value>天津自贸区
+                    <input name="region" @click="selectRegion('天津')" type="radio" value>天津自贸区
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="region" @click="selectRegion('SX')" type="radio" value>重庆自贸区
+                    <input name="region" @click="selectRegion('重庆')" type="radio" value>重庆自贸区
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="region" @click="selectRegion('SX')" type="radio" value>湖北自贸区
+                    <input name="region" @click="selectRegion('湖北')" type="radio" value>湖北自贸区
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="region" @click="selectRegion('SX')" type="radio" value>浙江自贸区
+                    <input name="region" @click="selectRegion('浙江')" type="radio" value>浙江自贸区
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="region" @click="selectRegion('SX')" type="radio" value>辽宁自贸区
+                    <input name="region" @click="selectRegion('辽宁')" type="radio" value>辽宁自贸区
                 </label>
             </li>
         </ul>
@@ -67,22 +67,22 @@
         <ul>
             <li>
                 <label>
-                    <input name="timeRange" @click="selectInfo('NO LIMIT')" type="radio" value checked>时间不限
+                    <input name="timeRange" @click="selectDate('4')" type="radio" value checked>时间不限
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="timeRange" @click="selectInfo('day')" type="radio" value>一个月内
+                    <input name="timeRange" @click="selectDate('1')" type="radio" value>一个月内
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="timeRange" @click="selectInfo('week')" type="radio" value>三个月内
+                    <input name="timeRange" @click="selectDate('2')" type="radio" value>三个月内
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="timeRange" @click="selectInfo('month')" type="radio" value>近一年内
+                    <input name="timeRange" @click="selectDate('3')" type="radio" value>近一年内
                 </label>
             </li>
         </ul>
@@ -95,12 +95,12 @@
             </li>-->
             <li>
                 <label>
-                    <input name="orderType" type="radio" value checked>按时间降序排序
+                    <input name="orderType" @click="orderBy('down')" type="radio" value checked>按时间降序排序
                 </label>
             </li>
             <li>
                 <label>
-                    <input name="orderType" type="radio" value>按时间升序排序
+                    <input name="orderType" @click="orderBy('up')" type="radio" value>按时间升序排序
                 </label>
             </li>
         </ul>
@@ -116,22 +116,62 @@ export default {
     },
     computed: {
         ...mapGetters("zimaoqu", {
-            currentPage: "getCurrentPage"
+            results: "getList",
+            refresh: "getRefresh",
+            totalNum: "getTotalNum",
+            region: "getRegion",
+            keywords: "getKeywords",
+            sort: "getSort",
+            differ: "getDiffer",
+            pageNum: "getPageNum"
         })
     },
     methods: {
         ...mapActions("zimaoqu", ["invokePageList"]),
-        ...mapActions("zimaoqu", ["invokeChangeRegion"]),
         ...mapActions("zimaoqu", ["invokeChangeRefresh"]),
-        selectRegion(parameter) {
-            this.invokeChangeRegion({ region: parameter });
+        ...mapActions("zimaoqu", ["invokeChangeRegion"]),
+        ...mapActions("zimaoqu", ["invokeChangeSort"]),
+        ...mapActions("zimaoqu", ["invokeChangeDiffer"]),
+        selectRegion(param) {
+            this.invokeChangeRegion({ region: param });
             this.invokeChangeRefresh({ refresh: false });
             this.$nextTick(() => {
                 this.invokeChangeRefresh({ refresh: true });
             });
             this.invokePageList({
-                pageNum: 0,
-                region: parameter
+                region: this.region,
+                keywords: this.keywords,
+                sort: this.sort,
+                differ: this.differ,
+                pageNum: 0
+            });
+        },
+        selectDate(param) {
+            this.invokeChangeDiffer({ differ: param });
+            this.invokeChangeRefresh({ refresh: false });
+            this.$nextTick(() => {
+                this.invokeChangeRefresh({ refresh: true });
+            });
+            this.invokePageList({
+                region: this.region,
+                keywords: this.keywords,
+                sort: this.sort,
+                differ: this.differ,
+                pageNum: 0
+            });
+        },
+        orderBy(param) {
+            this.invokeChangeSort({ sort: param });
+            this.invokeChangeRefresh({ refresh: false });
+            this.$nextTick(() => {
+                this.invokeChangeRefresh({ refresh: true });
+            });
+            this.invokePageList({
+                region: this.region,
+                keywords: this.keywords,
+                sort: this.sort,
+                differ: this.differ,
+                pageNum: 0
             });
         }
     }

@@ -2,17 +2,17 @@ import axios from 'axios'
 
 const state = {
     List: [],
-    region: 'SH',
     refresh: true,
     totalNum: 0,
-    keywords: ''
+    region: 'all',
+    keywords: '',
+    sort: 'down',
+    differ: '4',
+    pageNum: 0
 };
 const getters = {
     getList(state) {
         return state.List;
-    },
-    getRegion(state) {
-        return state.region;
     },
     getRefresh(state) {
         return state.refresh;
@@ -20,8 +20,20 @@ const getters = {
     getTotalNum(state) {
         return state.totalNum;
     },
+    getRegion(state) {
+        return state.region;
+    },
     getKeywords(state) {
         return state.keywords;
+    },
+    getSort(state) {
+        return state.sort;
+    },
+    getDiffer(state) {
+        return state.differ;
+    },
+    getPageNum(state) {
+        return state.pageNum;
     },
 };
 const mutations = {
@@ -38,28 +50,46 @@ const mutations = {
                 console.log(err);
             })
     },
-    changeRegion(state, item) {
-        state.region = item.region;
-    },
     changeRefresh(state, item) {
         state.refresh = item.refresh;
     },
+    changeRegion(state, item) {
+        state.region = item.region;
+    },
     changeKeywords(state, item) {
         state.keywords = item.keywords;
+    },
+    changeSort(state, item) {
+        state.sort = item.sort;
+    },
+    changeDiffer(state, item) {
+        state.differ = item.differ;
+    },
+    changePageNum(state, item) {
+        state.pageNum = item.pageNum;
     }
 };
 const actions = {
     invokePageList(context, item) {
         context.commit('pageList', item);
     },
-    invokeChangeRegion(context, item) {
-        context.commit('changeRegion', item);
-    },
     invokeChangeRefresh(context, item) {
         context.commit('changeRefresh', item);
     },
+    invokeChangeRegion(context, item) {
+        context.commit('changeRegion', item);
+    },
     invokeChangeKeywords(context, item) {
         context.commit('changeKeywords', item);
+    },
+    invokeChangeSort(context, item) {
+        context.commit('changeSort', item);
+    }, 
+    invokeChangeDiffer(context, item) {
+        context.commit('changeDiffer', item);
+    },
+    invokeChangePageNum(context, item) {
+        context.commit('changePageNum', item);
     },
 };
 export default {

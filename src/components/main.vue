@@ -7,7 +7,7 @@
                 <p class="result-title mgb10 blue">{{value.title }}</p>
                 <p class="result-content mgb10">{{value.abstract | formatContent }}</p>
                 <div class="result-info">
-                    <a class="result-url mgb10 green" :href=value.url>{{value.url | formatUrl}}</a>
+                    <a class="result-url mgb10 green" :href="value.url">{{value.url | formatUrl}}</a>
                     <span class="result-date">{{value.date | formatDate}}</span>
                 </div>
             </li>
@@ -15,7 +15,7 @@
         <el-pagination
             background
             layout="prev, pager, next"
-            :total="totalNum*10"
+            :total="Math.ceil(totalNum*10/6)"
             class="page-item"
             @current-change="currentChange()"
             ref="input1"
@@ -40,22 +40,28 @@ export default {
     },
     methods: {
         ...mapActions("zimaoqu", ["invokePageList"]),
+        ...mapActions("zimaoqu", ["changePageNum"]),
         currentChange() {
             this.invokePageList({
-                pageNum: this.$refs.input1.internalCurrentPage - 1,
-                region: this.region
+                region: this.region,
+                keywords: this.keywords,
+                sort: this.sort,
+                differ: this.differ,
+                pageNum: this.$refs.input1.internalCurrentPage - 1
             });
         }
     },
     computed: {
         ...mapGetters("zimaoqu", {
             results: "getList",
-            region: "getRegion",
-            currentPage: "getCurrentPage",
             refresh: "getRefresh",
             totalNum: "getTotalNum",
-            keywords: "getKeywords"
-        }),
+            region: "getRegion",
+            keywords: "getKeywords",
+            sort: "getSort",
+            differ: "getDiffer",
+            pageNum: "getPageNum"
+        })
     },
     filters: {
         formatContent: function(value) {

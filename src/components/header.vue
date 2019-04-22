@@ -5,7 +5,7 @@
             <p class="header-text brand-color">自贸区新闻检索平台</p>
         </div>
         <div class="header-right">
-            <input type="text" class="search-input" placeholder="请输入搜索内容..." v-model="keywords">
+            <input type="text" class="search-input" placeholder="请输入搜索内容..." v-model="searchText">
             <p class="search-text" style="color:cursor:pointer" @click="search">搜索</p>
         </div>
     </div>
@@ -17,23 +17,24 @@ export default {
     name: "myHeader",
     data() {
         return {
-            keywords: ""
+            searchText: ""
         };
     },
     methods: {
         ...mapActions("zimaoqu", ["invokePageList"]),
         ...mapActions("zimaoqu", ["invokeChangeKeywords"]),
-        currentChange() {
-            this.invokePageList({
-                pageNum: this.$refs.input1.internalCurrentPage - 1,
-                region: this.region
-            });
-        },
+        ...mapActions("zimaoqu", ["invokeChangeRefresh"]),
         search() {
-            this.invokeChangeKeywords({ keywords: this.keywords });
+            this.invokeChangeKeywords({ keywords: this.searchText });
+            this.invokeChangeRefresh({ refresh: false });
+            this.$nextTick(() => {
+                this.invokeChangeRefresh({ refresh: true });
+            });
             this.invokePageList({
-                region: "浙江",
+                region: this.region,
                 keywords: this.keywords,
+                sort: this.sort,
+                differ: this.differ,
                 pageNum: 0
             });
         }
@@ -41,11 +42,13 @@ export default {
     computed: {
         ...mapGetters("zimaoqu", {
             results: "getList",
-            region: "getRegion",
-            currentPage: "getCurrentPage",
             refresh: "getRefresh",
-            totalNum: "getTotalNum"
-            // keywords: "getKeywords"
+            totalNum: "getTotalNum",
+            region: "getRegion",
+            keywords: "getKeywords",
+            sort: "getSort",
+            differ: "getDiffer",
+            pageNum: "getPageNum"
         }),
         resultCounts() {
             return 1222222;
