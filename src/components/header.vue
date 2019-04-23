@@ -2,10 +2,16 @@
     <div id="header">
         <div class="header-left">
             <i class="el-icon-search search-icon"></i>
-            <p class="header-text brand-color">自贸区新闻检索平台</p>
+            <p class="header-text brand-color" style="color:cursor:pointer">自贸区新闻检索平台</p>
         </div>
         <div class="header-right">
-            <input type="text" class="search-input" placeholder="请输入搜索内容..." v-model="searchText">
+            <input
+                type="text"
+                class="search-input"
+                placeholder="请输入搜索内容..."
+                @keydown="CheckInfo()"
+                v-model="searchText"
+            >
             <p class="search-text" style="color:cursor:pointer" @click="search">搜索</p>
         </div>
     </div>
@@ -25,6 +31,7 @@ export default {
         ...mapActions("zimaoqu", ["invokeChangeKeywords"]),
         ...mapActions("zimaoqu", ["invokeChangeRefresh"]),
         search() {
+            this.scroll();
             this.invokeChangeKeywords({ keywords: this.searchText });
             this.invokeChangeRefresh({ refresh: false });
             this.$nextTick(() => {
@@ -37,7 +44,12 @@ export default {
                 differ: this.differ,
                 pageNum: 0
             });
-        }
+        },
+        CheckInfo() {
+            if (event.keyCode == 13) {
+                this.search();
+            }
+        },
     },
     computed: {
         ...mapGetters("zimaoqu", {
@@ -76,8 +88,12 @@ export default {
         display flex;
         align-items center;
 
+        .header-text
+            cursor pointer;
+
         .search-icon
             margin-top 5px;
+            cursor pointer;
 
     .header-right
         // border-radius 30px;
@@ -97,11 +113,12 @@ export default {
 
         .search-text
             width 10%;
-            height 44px;
+            height 46px;
             vertical-align center;
             color white;
             font-size 20px;
             font-weight bold;
             background-color rgb(64, 158, 255);
             line-height 44px;
+            cursor pointer;
 </style>

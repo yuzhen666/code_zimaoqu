@@ -4,23 +4,31 @@
         <p class="result-text2" v-if="keywords != ''">以下为您显示“{{keywords}}”的搜索结果。</p>
         <ul>
             <li v-for="value in results" :key="value.id">
-                <p class="result-title mgb10 blue">{{value.title }}</p>
-                <p class="result-content mgb10">{{value.abstract | formatContent }}</p>
+                <a class="result-title mgb10 blue" :href="value.url">{{value.title }}</a>
+                <p class="result-content mgb10">{{value.abstract }}</p>
                 <div class="result-info">
                     <a class="result-url mgb10 green" :href="value.url">{{value.url | formatUrl}}</a>
                     <span class="result-date">{{value.date | formatDate}}</span>
                 </div>
             </li>
         </ul>
-        <el-pagination
-            background
-            layout="prev, pager, next"
-            :total="Math.ceil(totalNum*10/6)"
-            class="page-item"
-            @current-change="currentChange()"
-            ref="input1"
-            v-if="refresh"
-        ></el-pagination>
+        <div v-if="displayVal">
+            <div class="empty-result" v-if="totalNum == 0">
+                <p>很抱歉，没有找到和您的查询相匹配的结果。</p>
+                <p class="mgt20">您可以尝试更换检索词或更改筛选条件，重新检索。</p>
+            </div>
+        </div>
+        <div v-if="totalNum != 0">
+            <el-pagination
+                background
+                layout="prev, pager, next"
+                :total="Math.ceil(totalNum*10/6)"
+                class="page-item"
+                @current-change="currentChange()"
+                ref="input1"
+                v-if="refresh"
+            ></el-pagination>
+        </div>
     </div>
 </template>
 
@@ -29,7 +37,9 @@ import { mapGetters, mapActions } from "vuex";
 export default {
     name: "myMain",
     data() {
-        return {};
+        return {
+            displayVal: false
+        };
     },
     created() {
         this.invokePageList({
@@ -38,10 +48,14 @@ export default {
             pageNum: 0
         });
     },
+    beforeUpdate() {
+        this.displayVal = true;
+    },
     methods: {
         ...mapActions("zimaoqu", ["invokePageList"]),
         ...mapActions("zimaoqu", ["changePageNum"]),
         currentChange() {
+            this.scroll();
             this.invokePageList({
                 region: this.region,
                 keywords: this.keywords,
@@ -64,13 +78,6 @@ export default {
         })
     },
     filters: {
-        formatContent: function(value) {
-            if (!value) {
-                return "";
-            } else {
-                return value.slice(0, 200) + "...";
-            }
-        },
         formatUrl: function(value) {
             if (!value) {
                 return "";
@@ -128,6 +135,7 @@ export default {
         .result-title
             font-size 18px;
             color rgb(64, 158, 255);
+            cursor pointer;
 
         .result-content
             font-size small;
@@ -137,6 +145,13 @@ export default {
             justify-content space-between;
             font-size 14px;
             margin-top 10px;
+
+    .empty-result
+        color red;
+        margin-top 50px;
+
+        .mgt20
+            margin-top 20px;
 
     .page-item
         margin-top 30px;

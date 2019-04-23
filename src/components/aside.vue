@@ -133,6 +133,7 @@ export default {
         ...mapActions("zimaoqu", ["invokeChangeSort"]),
         ...mapActions("zimaoqu", ["invokeChangeDiffer"]),
         selectRegion(param) {
+            this.scroll();
             this.invokeChangeRegion({ region: param });
             this.invokeChangeRefresh({ refresh: false });
             this.$nextTick(() => {
@@ -147,6 +148,7 @@ export default {
             });
         },
         selectDate(param) {
+            this.scroll();
             this.invokeChangeDiffer({ differ: param });
             this.invokeChangeRefresh({ refresh: false });
             this.$nextTick(() => {
@@ -161,6 +163,7 @@ export default {
             });
         },
         orderBy(param) {
+            this.scroll();
             this.invokeChangeSort({ sort: param });
             this.invokeChangeRefresh({ refresh: false });
             this.$nextTick(() => {
@@ -203,4 +206,8 @@ export default {
 
         input
             margin-right 3px;
+            cursor pointer;
+
+        label
+            cursor pointer;
 </style>

@@ -23,3 +23,19 @@ new Vue({
     components: { App },
     template: '<App/>'
 })
+
+Vue.prototype.scroll = function () {
+    var timer = null;
+    cancelAnimationFrame(timer);
+    timer = requestAnimationFrame(function fn() {
+        var oTop =
+            document.body.scrollTop ||
+            document.documentElement.scrollTop;
+        if (oTop > 0) {
+            scrollTo(0, oTop - 40);
+            timer = requestAnimationFrame(fn);
+        } else {
+            cancelAnimationFrame(timer);
+        }
+    });
+};
