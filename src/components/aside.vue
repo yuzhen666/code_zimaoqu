@@ -1,6 +1,6 @@
 <template>
     <div id="aside">
-        <p>地区 分类</p>
+        <p>地区分类</p>
         <ul>
             <li>
                 <label>
@@ -32,7 +32,7 @@
                     <input name="region" @click="selectRegion('陕西')" type="radio" value>陕西自贸区
                 </label>
             </li>
-            <li>
+            <!-- <li>
                 <label>
                     <input name="region" @click="selectRegion('四川')" type="radio" value>四川自贸区
                 </label>
@@ -61,7 +61,7 @@
                 <label>
                     <input name="region" @click="selectRegion('辽宁')" type="radio" value>辽宁自贸区
                 </label>
-            </li>
+            </li> -->
         </ul>
         <p class="mgt25">时间范围</p>
         <ul>

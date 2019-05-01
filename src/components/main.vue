@@ -5,7 +5,7 @@
         <ul>
             <li v-for="value in results" :key="value.id">
                 <a class="result-title mgb10 blue" :href="value.url">{{value.title }}</a>
-                <p class="result-content mgb10">{{value.abstract }}</p>
+                <p class="result-content mgb10" v-html="replaceInfo(value.abstract)"></p>
                 <div class="result-info">
                     <a class="result-url mgb10 green" :href="value.url">{{value.url | formatUrl}}</a>
                     <span class="result-date">{{value.date | formatDate}}</span>
@@ -22,7 +22,7 @@
             <el-pagination
                 background
                 layout="prev, pager, next"
-                :total="Math.ceil(totalNum*10/6)"
+                :total="Math.ceil(totalNum*10/4)"
                 class="page-item"
                 @current-change="currentChange()"
                 ref="input1"
@@ -63,6 +63,13 @@ export default {
                 differ: this.differ,
                 pageNum: this.$refs.input1.internalCurrentPage - 1
             });
+        },
+        replaceInfo: function(value) {
+            if (!this.keywords) {
+                return value;
+            }
+            var reg = new RegExp(this.keywords);
+            return value.replace(reg, `<span style="color: red">${this.keywords}</span>`);
         }
     },
     computed: {
